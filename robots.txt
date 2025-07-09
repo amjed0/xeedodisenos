@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://xeedodisenos.shop/sitemap.xml
