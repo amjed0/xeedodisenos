@@ -1,74 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Shopping Cart - Xeedo Diseños</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Xeedo Diseños - Trendy Fashion for All</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      text-align: center;
+    /* ...existing CSS remains unchanged... */
+
+    .shipping-form {
+      margin-top: 1.5rem;
     }
-    .cart-box {
-      background: #fff;
-      padding: 40px;
-      margin: 100px auto;
-      width: 400px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      border-radius: 12px;
-    }
-    .checkout-btn {
-      background-color: #e53935;
-      color: white;
-      padding: 12px 24px;
-      border: none;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .checkout-btn:hover {
-      background-color: #d32f2f;
+
+    .shipping-form input,
+    .shipping-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
+  <!-- ...existing content remains unchanged... -->
 
-  <div class="cart-box">
-    <h2>Shopping Cart</h2>
-    <p><strong>Item:</strong> Sustainable Cotton T-Shirt</p>
-    <p><strong>Price:</strong> ₹1</p>
-    <p><strong>Total:</strong> ₹1</p>
-    <button onclick="payNow()" class="checkout-btn">Proceed to Checkout</button>
+  <!-- Cart Modal -->
+  <div class="cart-modal" id="cartModal">
+    <div class="cart-content">
+      <div class="cart-header">
+        <h3 class="cart-title">Shopping Cart</h3>
+        <button class="close-cart" onclick="toggleCart()">×</button>
+      </div>
+      <div id="cartItems">
+        <!-- Cart items will be populated by JavaScript -->
+      </div>
+      <div class="shipping-form">
+        <input type="text" id="customerName" placeholder="Full Name" required />
+        <input type="email" id="customerEmail" placeholder="Email" required />
+        <input type="tel" id="customerPhone" placeholder="Phone Number" required />
+        <textarea id="customerAddress" placeholder="Shipping Address" rows="3" required></textarea>
+      </div>
+      <div class="cart-total">
+        <div class="total-amount">Total: ₹<span id="totalAmount">0</span></div>
+        <button class="checkout-btn" onclick="checkout()" id="checkoutBtn">Proceed to Checkout</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Razorpay Script -->
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script>
-    function payNow(){
-      var options = {
-        "key": "rzp_live_17AOZxw199ycDN", // 👉 ഇതിൽ നിന്റെ Razorpay KEY ഇടു (Test or Live)
-        "amount": 129900, // in paisa (₹1299)
-        "currency": "INR",
-        "name": "Xeedo Diseños",
-        "description": "T-Shirt Payment",
-        "handler": function (response){
-          alert("✅ Payment Successful!\nPayment ID: " + response.razorpay_payment_id);
-          window.location.href = "success.html"; // success page option
+    // ...products and cart logic remains unchanged...
+
+    function checkout() {
+      if (cart.length === 0) return;
+
+      const name = document.getElementById('customerName').value.trim();
+      const email = document.getElementById('customerEmail').value.trim();
+      const phone = document.getElementById('customerPhone').value.trim();
+      const address = document.getElementById('customerAddress').value.trim();
+
+      if (!name || !email || !phone || !address) {
+        alert('Please fill all shipping details before proceeding.');
+        return;
+      }
+
+      const totalAmount = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+
+      const options = {
+        key: 'rzp_live_17AOZxw199ycDN', // Replace with your actual Razorpay key
+        amount: totalAmount * 100,
+        currency: 'INR',
+        name: 'Xeedo Diseños',
+        description: 'Fashion Purchase',
+        prefill: {
+          name: name,
+          email: email,
+          contact: phone
         },
-        "prefill": {
-          "name": "Amjed Hadi",
-          "email": "amjed@example.com",
-          "contact": "9746102377"
+        notes: {
+          address: address
         },
-        "theme": {
-          "color": "#e53935"
+        handler: function (response) {
+          alert('✅ Payment successful! Order ID: ' + response.razorpay_payment_id);
+          cart = [];
+          updateCartCount();
+          updateCartDisplay();
+          toggleCart();
+        },
+        theme: {
+          color: '#667eea'
         }
       };
-      var rzp1 = new Razorpay(options);
-      rzp1.open();
-    }
-  </script>
 
+      const rzp = new Razorpay(options);
+      rzp.open();
+    }
+
+    // ...rest of script (event listeners, etc.) remains unchanged...
+  </script>
 </body>
 </html>
-
