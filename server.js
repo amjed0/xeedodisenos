@@ -10,7 +10,7 @@ app.use(express.json());
 
 // PostgreSQL connection
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, // Render gives this
+  connectionString: process.env.postgresql://xeedo_db_5zda_user:aM3DcZCpLyqxFB0D6ykMNuXJurVm6jqv@dpg-d1p05enfte5s73bq4pi0-a.singapore-postgres.render.com/xeedo_db_5zda, // Render gives this
   ssl: { rejectUnauthorized: false }
 });
 
