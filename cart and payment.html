@@ -788,24 +788,25 @@
                 document.getElementById('paymentLoading').style.display = 'none';
                 
                 // FIXED: Proper Razorpay configuration
-                const options = {
-                    key:'rzp_live_puXHuA9S6iVgKF',
-                    amount:totalAmount * 100,
-                    currency: 'INR',
+                 const options = {
+                    key: RAZORPAY_KEY,
+                    amount: order.amount,
+                    currency: order.currency,
                     name: 'Xeedo Diseños',
                     description: 'Fashion Purchase',
                     image: 'https://via.placeholder.com/150x150/667eea/ffffff?text=XD',
                     order_id: order.id,
-                    handler: function (response) {'✅ Payment successful! Payment ID: ' + response.razorpay_payment_id);
-    // clear cart, etc.
+                    handler: function (response) {
+                        // FIXED: Proper success handling
+                        handlePaymentSuccess(response);
                     },
                     prefill: {
-                        name: name,
-                        email: email,
-                        contact: phone
+                        name: 'Customer Name',
+                        email: 'customer@example.com',
+                        contact: '9999999999'
                     },
                     notes: {
-                        address: address
+                        address: 'Xeedo Diseños Store'
                     },
                     theme: {
                         color: '#667eea'
